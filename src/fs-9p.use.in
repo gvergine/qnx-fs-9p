@@ -1,0 +1,32 @@
+%C - 9P2000.L filesystem client for QEMU virtio-9p shares (version @PROJECT_VERSION@)
+
+%C [-o option[,option...]] mount_tag mount_point
+
+Mounts the host directory that QEMU exports with mount_tag
+(-device virtio-9p-device,...,mount_tag=TAG on the aarch64 virt machine)
+at mount_point, then runs in the background.
+
+Options:
+ ro           Mount read-only
+ rw           Mount read-write (the default)
+ cache=MS     Keep file attributes and failed lookups for MS milliseconds
+              (default 0: always ask the host). Changes made on the host
+              may show up to MS late; file contents are never cached.
+ msize=N      Largest 9P message to ask for, in bytes (default 524288)
+ requests=N   9P requests in flight at once, 1-8 (default 4); each one
+              takes 2 x msize of memory
+ timeout=MS   Give up on a request after MS milliseconds, 0 = never
+              (default 30000)
+ debug        Stay in the foreground; log setup and every 9P message
+ poll         Poll for completions instead of using the interrupt (debug)
+ irq=N        Use interrupt N instead of the one the device slot implies
+
+Unmount with 'slay fs-9p'. Without root, fs-9p needs the abilities
+mem_phys, interrupt and pathspace. Full documentation:
+share/doc/fs-9p/html/index.html under the installation prefix.
+
+Examples:
+ fs-9p hostshare /mnt/host
+ fs-9p -o ro,cache=2000 tools /opt/tools
+ on -u user -A nonroot,allow,mem_phys -A nonroot,allow,interrupt \
+    -A nonroot,allow,pathspace fs-9p hostshare /mnt/host

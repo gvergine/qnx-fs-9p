@@ -1,0 +1,26 @@
+# fs-9p: lines to add fs-9p to a QNX image (installed as
+# share/fs-9p/fs-9p.build). Replace /opt/fs-9p with your installation
+# prefix, hostshare with the mount tag given to QEMU, and /mnt/host with
+# the mount point you want. Details: the User Guide, "Adding fs-9p to a
+# QNX system".
+#
+# ---- mkqnximage images -------------------------------------------------------
+# local/snippets/system_files.custom (the binary, in /system/bin):
+#
+#   [perms=0755] bin/fs-9p=/opt/fs-9p/sbin/fs-9p
+#
+# local/snippets/post_start.custom (mount at the end of startup):
+#
+#   fs-9p hostshare /mnt/host
+#
+# then: mkqnximage --build --noprompt
+#
+# ---- your own IFS buildfile ----------------------------------------------------
+# In the startup script, before anything that uses the share:
+#
+#   fs-9p hostshare /mnt/host
+#   waitfor /mnt/host 10
+#
+# In the file list (the binary, in /proc/boot):
+
+[perms=0755] fs-9p=/opt/fs-9p/sbin/fs-9p

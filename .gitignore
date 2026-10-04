@@ -1,0 +1,11 @@
+/build*/
+/stage/
+compile_commands.json
+.cache/
+*.o
+*.a
+qemu.log
+*.trace
+# mkqnximage working dirs (local/, output/) if created inside the repo
+/vm/
+/.venv-docs/
